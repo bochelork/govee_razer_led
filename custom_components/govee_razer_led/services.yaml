@@ -1,0 +1,32 @@
+set_wave:
+  name: Set Wave Effect
+  description: Configure the brightness wave animation parameters
+  target:
+    entity:
+      domain: light
+      integration: govee_razer_led
+  fields:
+    amplitude:
+      name: Amplitude
+      description: Wave amplitude/intensity (0-100)
+      required: false
+      example: 50
+      default: 50
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          mode: slider
+    speed:
+      name: Speed
+      description: Wave speed (-100 to 100, negative reverses direction)
+      required: false
+      example: 30
+      default: 30
+      selector:
+        number:
+          min: -100
+          max: 100
+          step: 1
+          mode: slider

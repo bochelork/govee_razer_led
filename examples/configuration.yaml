@@ -1,0 +1,278 @@
+# Example configuration.yaml for Govee Razer LED integration
+# 
+# Note: It's recommended to use the UI configuration instead of YAML.
+# Go to Settings → Devices & Services → Add Integration → Govee Razer LED
+#
+# However, if you prefer YAML configuration, here are some examples:
+
+# Example 1: Single strip with default settings
+light:
+  - platform: govee_razer_led
+    strips:
+      - name: "Living Room Strip"
+        host: "192.168.1.126"
+
+# Example 2: Multiple strips with custom settings
+light:
+  - platform: govee_razer_led
+    strips:
+      # Strip 1: Living room with 10 LEDs
+      - name: "Living Room Strip"
+        host: "192.168.1.126"
+        port: 4003
+        num_leds: 10
+        num_sections: 5
+        update_interval: 0.05  # 20 FPS
+
+      # Strip 2: Bedroom with 15 LEDs
+      - name: "Bedroom Strip"
+        host: "192.168.1.104"
+        port: 4003
+        num_leds: 15
+        num_sections: 5
+        update_interval: 0.1   # 10 FPS for lower network usage
+
+      # Strip 3: Gaming desk with faster updates
+      - name: "Desk Strip"
+        host: "192.168.1.150"
+        port: 4003
+        num_leds: 10
+        num_sections: 5
+        update_interval: 0.033  # ~30 FPS
+
+# Example automation: Sunset effect
+automation:
+  - alias: "Evening Ambient Lighting"
+    trigger:
+      - platform: sun
+        event: sunset
+        offset: "-00:30:00"
+    action:
+      # Set warm colors
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip_section_1
+        data:
+          rgb_color: [255, 147, 41]  # Warm orange
+          brightness: 200
+          
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip_section_2
+        data:
+          rgb_color: [255, 120, 0]
+          brightness: 180
+          
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip_section_3
+        data:
+          rgb_color: [255, 90, 0]
+          brightness: 160
+          
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip_section_4
+        data:
+          rgb_color: [255, 60, 0]
+          brightness: 140
+          
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip_section_5
+        data:
+          rgb_color: [200, 50, 50]  # Deep red
+          brightness: 120
+
+      # Apply stretched effect for smooth gradient
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip
+        data:
+          effect: "stretched"
+
+      # Add subtle wave
+      - service: govee_razer_led.set_wave
+        target:
+          entity_id: light.living_room_strip
+        data:
+          amplitude: 20
+          speed: 15
+
+# Example automation: Dynamic party mode
+automation:
+  - alias: "Party Mode"
+    trigger:
+      - platform: state
+        entity_id: input_boolean.party_mode
+        to: "on"
+    action:
+      # Set vibrant colors
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_1
+          rgb_color: [255, 0, 0]    # Red
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_2
+          rgb_color: [255, 127, 0]  # Orange
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_3
+          rgb_color: [255, 255, 0]  # Yellow
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_4
+          rgb_color: [0, 255, 0]    # Green
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_5
+          rgb_color: [0, 0, 255]    # Blue
+          
+      # Double effect for repetition
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip
+        data:
+          effect: "double"
+          
+      # Fast wave animation
+      - service: govee_razer_led.set_wave
+        target:
+          entity_id: light.living_room_strip
+        data:
+          amplitude: 80
+          speed: 60
+
+# Example: Gaming reactive lighting
+automation:
+  - alias: "Gaming Alert"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.gaming_pc
+        to: "on"
+    action:
+      # Cyan/Purple gaming aesthetic
+      - service: light.turn_on
+        data:
+          entity_id: light.desk_strip_section_1
+          rgb_color: [0, 255, 255]  # Cyan
+      - service: light.turn_on
+        data:
+          entity_id: light.desk_strip_section_3
+          rgb_color: [128, 0, 255]  # Purple
+      - service: light.turn_on
+        data:
+          entity_id: light.desk_strip_section_5
+          rgb_color: [0, 255, 255]  # Cyan
+          
+      - service: light.turn_on
+        target:
+          entity_id: light.desk_strip
+        data:
+          effect: "mirror"
+          brightness: 255
+          
+      - service: govee_razer_led.set_wave
+        target:
+          entity_id: light.desk_strip
+        data:
+          amplitude: 40
+          speed: -30  # Negative for reverse direction
+
+# Example: Sleep mode
+automation:
+  - alias: "Sleep Mode"
+    trigger:
+      - platform: time
+        at: "22:30:00"
+    action:
+      # Dim warm light
+      - service: light.turn_on
+        target:
+          entity_id: 
+            - light.bedroom_strip_section_1
+            - light.bedroom_strip_section_2
+            - light.bedroom_strip_section_3
+            - light.bedroom_strip_section_4
+            - light.bedroom_strip_section_5
+        data:
+          rgb_color: [255, 80, 20]
+          brightness: 50
+          
+      - service: light.turn_on
+        target:
+          entity_id: light.bedroom_strip
+        data:
+          effect: "stretched"
+          
+      - service: govee_razer_led.set_wave
+        target:
+          entity_id: light.bedroom_strip
+        data:
+          amplitude: 10
+          speed: 5   # Very slow, calming wave
+
+# Script: Quick color presets
+script:
+  govee_preset_ocean:
+    alias: "Ocean Preset"
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_1
+          rgb_color: [0, 105, 148]   # Deep blue
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_3
+          rgb_color: [0, 168, 232]   # Light blue
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_5
+          rgb_color: [127, 205, 255] # Sky blue
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip
+        data:
+          effect: "stretched"
+      - service: govee_razer_led.set_wave
+        target:
+          entity_id: light.living_room_strip
+        data:
+          amplitude: 35
+          speed: 20
+
+  govee_preset_fire:
+    alias: "Fire Preset"
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_1
+          rgb_color: [255, 0, 0]     # Red
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_2
+          rgb_color: [255, 40, 0]    # Red-Orange
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_3
+          rgb_color: [255, 100, 0]   # Orange
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_4
+          rgb_color: [255, 180, 0]   # Yellow-Orange
+      - service: light.turn_on
+        data:
+          entity_id: light.living_room_strip_section_5
+          rgb_color: [255, 220, 0]   # Yellow
+      - service: light.turn_on
+        target:
+          entity_id: light.living_room_strip
+        data:
+          effect: "stretched"
+      - service: govee_razer_led.set_wave
+        target:
+          entity_id: light.living_room_strip
+        data:
+          amplitude: 60
+          speed: 40

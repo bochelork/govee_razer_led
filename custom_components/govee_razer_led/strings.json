@@ -1,0 +1,34 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Govee Razer LED Strip",
+        "description": "Configure your Govee LED strip with Razer/DreamView protocol support",
+        "data": {
+          "name": "Strip Name",
+          "host": "IP Address",
+          "port": "Port",
+          "num_leds": "Number of LEDs",
+          "num_sections": "Number of Color Sections",
+          "update_interval": "Update Interval (seconds)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to device",
+      "unknown": "Unexpected error occurred"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure Govee Razer LED Strip",
+        "data": {
+          "num_leds": "Number of LEDs",
+          "num_sections": "Number of Color Sections",
+          "update_interval": "Update Interval (seconds)"
+        }
+      }
+    }
+  }
+}
