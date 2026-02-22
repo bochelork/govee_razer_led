@@ -257,7 +257,9 @@ class GoveeRazerStrip(LightEntity):
     async def _update_loop(self) -> None:
         """Main update loop for sending LED data."""
         self._running = True
-        
+
+        rotation_offset = 0
+
         # Enable protocol
         await self.hass.async_add_executor_job(self._protocol.send_enable, True)
 
