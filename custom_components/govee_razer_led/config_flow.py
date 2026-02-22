@@ -37,14 +37,20 @@ class GoveeRazerLEDConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             # Validate the input
             try:
-                # Create a unique ID based on host
-                await self.async_set_unique_id(user_input[CONF_HOST])
-                self._abort_if_unique_id_configured()
+                # Validate host format
+                host = user_input[CONF_HOST]
+                if not host:
+                    errors["base"] = "invalid_host"
+                else:
+                    # Create a unique ID based on host
+                    await self.async_set_unique_id(host)
+                    self._abort_if_unique_id_configured()
 
-                return self.async_create_entry(
-                    title=user_input[CONF_NAME],
-                    data=user_input,
-                )
+                    if not errors:
+                        return self.async_create_entry(
+                            title=user_input[CONF_NAME],
+                            data=user_input,
+                        )
             except Exception as err:
                 _LOGGER.exception("Unexpected exception: %s", err)
                 errors["base"] = "unknown"
@@ -91,25 +97,40 @@ class GoveeRazerLEDOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_init(self, user_input=None):
         """Manage the options."""
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            # Update the config entry with new values
+            self.hass.config_entries.async_update_entry(
+                self.config_entry,
+                data={**self.config_entry.data, **user_input}
+            )
+            return self.async_create_entry(title="", data={})
+
+        # Get current values from either options or data
+        current_num_leds = self.config_entry.options.get(
+            CONF_NUM_LEDS,
+            self.config_entry.data.get(CONF_NUM_LEDS, DEFAULT_NUM_LEDS)
+        )
+        current_num_sections = self.config_entry.options.get(
+            CONF_NUM_SECTIONS,
+            self.config_entry.data.get(CONF_NUM_SECTIONS, DEFAULT_NUM_SECTIONS)
+        )
+        current_update_interval = self.config_entry.options.get(
+            CONF_UPDATE_INTERVAL,
+            self.config_entry.data.get(CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
+        )
 
         data_schema = vol.Schema(
             {
                 vol.Optional(
                     CONF_NUM_LEDS,
-                    default=self.config_entry.data.get(CONF_NUM_LEDS, DEFAULT_NUM_LEDS),
+                    default=current_num_leds,
                 ): vol.All(cv.positive_int, vol.Range(min=1, max=100)),
                 vol.Optional(
                     CONF_NUM_SECTIONS,
-                    default=self.config_entry.data.get(
-                        CONF_NUM_SECTIONS, DEFAULT_NUM_SECTIONS
-                    ),
+                    default=current_num_sections,
                 ): vol.All(cv.positive_int, vol.Range(min=MIN_SECTIONS, max=MAX_SECTIONS)),
                 vol.Optional(
                     CONF_UPDATE_INTERVAL,
-                    default=self.config_entry.data.get(
-                        CONF_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL
-                    ),
+                    default=current_update_interval,
                 ): vol.All(
                     cv.positive_float,
                     vol.Range(min=MIN_UPDATE_INTERVAL, max=MAX_UPDATE_INTERVAL),

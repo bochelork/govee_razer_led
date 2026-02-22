@@ -16,6 +16,7 @@
     },
     "error": {
       "cannot_connect": "Failed to connect to device",
+      "invalid_host": "Invalid IP address",
       "unknown": "Unexpected error occurred"
     }
   },

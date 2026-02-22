@@ -1,12 +1,12 @@
 {
   "domain": "govee_razer_led",
   "name": "Govee Razer LED Controller",
-  "documentation": "https://github.com/yourusername/govee_razer_led",
-  "issue_tracker": "https://github.com/yourusername/govee_razer_led/issues",
+  "documentation": "https://github.com/bochelork/govee_razer_led",
+  "issue_tracker": "https://github.com/bochelork/govee_razer_led/issues",
   "requirements": [],
-  "codeowners": ["@yourusername"],
+  "codeowners": ["@bochelork"],
   "config_flow": true,
   "dependencies": [],
   "iot_class": "local_push",
-  "version": "1.0.0"
+  "version": "1.0.1"
 }
