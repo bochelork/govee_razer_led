@@ -266,18 +266,27 @@ class GoveeRazerStrip(LightEntity):
                 if self._is_on:
                     # Apply color flow rotation if enabled
                     if self._color_flow_speed != 0:
-                        # Rotate the section colors based on color flow step
-                        # This mimics your original script's behavior
-                        rotated_colors = []
-                        rotation_offset = self._color_flow_step / self._color_flow_steps
+                        # Calculate rotation offset as a floating point for smooth rotation
+                        # Each step advances by (speed/100) through the color array
+                        rotation_offset = (self._color_flow_step * abs(self._color_flow_speed) / 100.0) % self._num_sections
                         
+                        # Rotate the section colors
+                        rotated_colors = []
                         for i in range(self._num_sections):
-                            # Calculate which base color to use with rotation
-                            base_index = int((i + rotation_offset) % self._num_sections)
-                            next_index = int((i + rotation_offset + 1) % self._num_sections)
+                            # Calculate the floating point position in the original color array
+                            if self._color_flow_speed > 0:
+                                # Forward rotation
+                                pos = (i - rotation_offset) % self._num_sections
+                            else:
+                                # Backward rotation
+                                pos = (i + rotation_offset) % self._num_sections
                             
-                            # Interpolation factor for smooth transition
-                            interp_factor = (rotation_offset % 1.0)
+                            # Get the two colors to interpolate between
+                            base_index = int(pos) % self._num_sections
+                            next_index = (base_index + 1) % self._num_sections
+                            
+                            # Interpolation factor (fractional part of position)
+                            interp_factor = pos - int(pos)
                             
                             base_color = self._color_manager.section_colors[base_index]
                             next_color = self._color_manager.section_colors[next_index]
@@ -299,11 +308,8 @@ class GoveeRazerStrip(LightEntity):
                         # Restore original colors
                         self._color_manager.section_colors = original_colors
                         
-                        # Update color flow step
-                        if self._color_flow_speed > 0:
-                            self._color_flow_step = (self._color_flow_step + 1) % self._color_flow_steps
-                        else:
-                            self._color_flow_step = (self._color_flow_step - 1) % self._color_flow_steps
+                        # Update color flow step (always increment, direction handled in calculation)
+                        self._color_flow_step = (self._color_flow_step + 1) % self._color_flow_steps
                     else:
                         # No color flow, use static colors
                         base_colors = self._color_manager.generate_effect_colors(self._effect)
