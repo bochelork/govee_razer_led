@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Background gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#141419;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#191e32;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- LED glows with stronger opacity -->
+    <radialGradient id="glow1">
+      <stop offset="0%" style="stop-color:#ff2878;stop-opacity:0.9" />
+      <stop offset="30%" style="stop-color:#ff2878;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#ff2878;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#ff2878;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="glow2">
+      <stop offset="0%" style="stop-color:#ff8c00;stop-opacity:0.9" />
+      <stop offset="30%" style="stop-color:#ff8c00;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#ff8c00;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="glow3">
+      <stop offset="0%" style="stop-color:#ffe600;stop-opacity:0.9" />
+      <stop offset="30%" style="stop-color:#ffe600;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#ffe600;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#ffe600;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="glow4">
+      <stop offset="0%" style="stop-color:#00ff8c;stop-opacity:0.9" />
+      <stop offset="30%" style="stop-color:#00ff8c;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#00ff8c;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#00ff8c;stop-opacity:0" />
+    </radialGradient>
+    
+    <radialGradient id="glow5">
+      <stop offset="0%" style="stop-color:#5078ff;stop-opacity:0.9" />
+      <stop offset="30%" style="stop-color:#5078ff;stop-opacity:0.6" />
+      <stop offset="70%" style="stop-color:#5078ff;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#5078ff;stop-opacity:0" />
+    </radialGradient>
+    
+    <!-- LED cores -->
+    <radialGradient id="led1" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#ffb0d0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff2878;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="led2" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#ffd080;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="led3" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#fff8a0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffe600;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="led4" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#a0ffd8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00ff8c;stop-opacity:1" />
+    </radialGradient>
+    
+    <radialGradient id="led5" cx="35%" cy="35%">
+      <stop offset="0%" style="stop-color:#b0c8ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5078ff;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+      <feOffset dx="0" dy="6" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.6"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Glow filter for extra punch -->
+    <filter id="strongGlow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Wave blur filter for feather effect (5px) -->
+    <filter id="waveBlur" x="-40%" y="-80%" width="180%" height="260%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+    </filter>
+
+    <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#bgGradient)"/>
+  
+  <!-- Symmetrical circuit grid -->
+  <g opacity="0.12" stroke="#5078c8" stroke-width="1.5" fill="none">
+    <!-- Vertical lines - 64px spacing (512/8 = 64) -->
+    <line x1="0" y1="0" x2="0" y2="512"/>
+    <line x1="64" y1="0" x2="64" y2="512"/>
+    <line x1="128" y1="0" x2="128" y2="512"/>
+    <line x1="192" y1="0" x2="192" y2="512"/>
+    <line x1="256" y1="0" x2="256" y2="512"/>
+    <line x1="320" y1="0" x2="320" y2="512"/>
+    <line x1="384" y1="0" x2="384" y2="512"/>
+    <line x1="448" y1="0" x2="448" y2="512"/>
+    <line x1="512" y1="0" x2="512" y2="512"/>
+    
+    <!-- Horizontal lines - 64px spacing -->
+    <line x1="0" y1="0" x2="512" y2="0"/>
+    <line x1="0" y1="64" x2="512" y2="64"/>
+    <line x1="0" y1="128" x2="512" y2="128"/>
+    <line x1="0" y1="192" x2="512" y2="192"/>
+    <line x1="0" y1="256" x2="512" y2="256"/>
+    <line x1="0" y1="320" x2="512" y2="320"/>
+    <line x1="0" y1="384" x2="512" y2="384"/>
+    <line x1="0" y1="448" x2="512" y2="448"/>
+    <line x1="0" y1="512" x2="512" y2="512"/>
+  </g>
+  
+  <!-- Wave indicators - gradient colors with feather -->
+  <g style="overflow: visible;">
+    <!-- Wave 1 - Rood -->
+    <path d="M 60 100 Q 120 85, 180 100 T 300 100 T 420 100 T 452 100" 
+          stroke="#ff3264" stroke-width="12" fill="none" 
+          stroke-linecap="round" opacity="0.6" 
+          filter="url(#waveBlur)"/>
+    
+    <!-- Wave 2 - Groen -->
+    <path d="M 60 130 Q 120 115, 180 130 T 300 130 T 420 130 T 452 130" 
+          stroke="#32ff64" stroke-width="12" fill="none" 
+          stroke-linecap="round" opacity="0.6" 
+          filter="url(#waveBlur)"/>
+    
+    <!-- Wave 3 - Blauw -->
+    <path d="M 60 160 Q 120 145, 180 160 T 300 160 T 420 160 T 452 160" 
+          stroke="#6496ff" stroke-width="12" fill="none" 
+          stroke-linecap="round" opacity="0.6" 
+          filter="url(#waveBlur)"/>
+  </g>
+  
+  <!-- LED Strip -->
+  <rect x="50" y="200" width="412" height="140" rx="25" fill="#232332" filter="url(#shadow)"/>
+  
+  <!-- Inner strip detail -->
+  <rect x="58" y="208" width="406" height="124" rx="20" fill="none" stroke="#3a3a50" stroke-width="2"/>
+  
+  <!-- Connection lines -->
+  <line x1="138" y1="270" x2="162" y2="270" stroke="#3c3c50" stroke-width="3"/>
+  <line x1="208" y1="270" x2="232" y2="270" stroke="#3c3c50" stroke-width="3"/>
+  <line x1="278" y1="270" x2="302" y2="270" stroke="#3c3c50" stroke-width="3"/>
+  <line x1="348" y1="270" x2="372" y2="270" stroke="#3c3c50" stroke-width="3"/>
+  
+  <!-- LEDs with strong glows -->
+  
+  <!-- LED 1 - Pink/Red -->
+  <circle cx="125" cy="270" r="90" fill="url(#glow1)" opacity="0.8"/>
+  <circle cx="125" cy="270" r="60" fill="url(#glow1)" filter="url(#strongGlow)"/>
+  <circle cx="125" cy="270" r="28" fill="url(#led1)"/>
+  <ellipse cx="118" cy="263" rx="10" ry="8" fill="white" opacity="0.7"/>
+  <circle cx="116" cy="261" r="4" fill="white" opacity="0.9"/>
+  
+  <!-- LED 2 - Orange -->
+  <circle cx="190" cy="270" r="90" fill="url(#glow2)" opacity="0.8"/>
+  <circle cx="190" cy="270" r="60" fill="url(#glow2)" filter="url(#strongGlow)"/>
+  <circle cx="190" cy="270" r="28" fill="url(#led2)"/>
+  <ellipse cx="183" cy="263" rx="10" ry="8" fill="white" opacity="0.7"/>
+  <circle cx="181" cy="261" r="4" fill="white" opacity="0.9"/>
+  
+  <!-- LED 3 - Yellow -->
+  <circle cx="255" cy="270" r="90" fill="url(#glow3)" opacity="0.8"/>
+  <circle cx="255" cy="270" r="60" fill="url(#glow3)" filter="url(#strongGlow)"/>
+  <circle cx="255" cy="270" r="28" fill="url(#led3)"/>
+  <ellipse cx="248" cy="263" rx="10" ry="8" fill="white" opacity="0.7"/>
+  <circle cx="246" cy="261" r="4" fill="white" opacity="0.9"/>
+  
+  <!-- LED 4 - Cyan/Green -->
+  <circle cx="320" cy="270" r="90" fill="url(#glow4)" opacity="0.8"/>
+  <circle cx="320" cy="270" r="60" fill="url(#glow4)" filter="url(#strongGlow)"/>
+  <circle cx="320" cy="270" r="28" fill="url(#led4)"/>
+  <ellipse cx="313" cy="263" rx="10" ry="8" fill="white" opacity="0.7"/>
+  <circle cx="311" cy="261" r="4" fill="white" opacity="0.9"/>
+  
+  <!-- LED 5 - Blue -->
+  <circle cx="385" cy="270" r="90" fill="url(#glow5)" opacity="0.8"/>
+  <circle cx="385" cy="270" r="60" fill="url(#glow5)" filter="url(#strongGlow)"/>
+  <circle cx="385" cy="270" r="28" fill="url(#led5)"/>
+  <ellipse cx="378" cy="263" rx="10" ry="8" fill="white" opacity="0.7"/>
+  <circle cx="376" cy="261" r="4" fill="white" opacity="0.9"/>
+  
+  <text x="50%" y="430" text-anchor="middle"
+      font-size="48" font-family="Arial"
+      fill="#ff2878" filter="url(#textGlow)">
+      GOVEE
+  </text>
+  <text x="50%" y="428" text-anchor="middle"
+      font-size="45" font-family="Arial"
+      fill="#28ff78" filter="url(#textGlow)" opacity="0.9">
+      GOVEE
+  </text>
+  <text x="50%" y="427" text-anchor="middle"
+      font-size="42" font-family="Arial"
+      fill="#2878ff" filter="url(#textGlow)" opacity="0.6">
+      GOVEE
+  </text>
+
+</svg>
