@@ -268,7 +268,7 @@ class GoveeRazerStrip(LightEntity):
                     if self._color_flow_speed != 0:
                         # Calculate rotation offset as a floating point for smooth rotation
                         # Each step advances by (speed/100) through the color array
-                        if self._color_flow_step = 0: 
+                        if self._color_flow_step == 0: 
                             rotation_offset = (rotation_offset + 1) % self._num_sections
 #                        rotation_offset = (self._color_flow_step * abs(self._color_flow_speed) / 100.0) % self._num_sections
                         
