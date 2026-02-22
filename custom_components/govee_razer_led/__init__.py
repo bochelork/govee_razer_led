@@ -18,9 +18,11 @@ class GoveeWaveCoordinator:
         """Initialize the coordinator."""
         self.amplitude = 50
         self.speed = 30
+        self.color_flow_speed = 0
         self.strip_entity = None
         self.amplitude_entity = None
         self.speed_entity = None
+        self.color_flow_entity = None
 
     def update_amplitude(self, value: int):
         """Update amplitude and sync entities."""
@@ -45,6 +47,15 @@ class GoveeWaveCoordinator:
                 self.strip_entity._wave_steps = round((2 * math.pi / (value / 100)) + 1)
             else:
                 self.strip_entity._wave_steps = 100
+
+    def update_color_flow_speed(self, value: int):
+        """Update color flow speed and sync entities."""
+        self.color_flow_speed = value
+        if self.color_flow_entity:
+            self.color_flow_entity._value = value
+            self.color_flow_entity.async_write_ha_state()
+        if self.strip_entity:
+            self.strip_entity._color_flow_speed = value
 
 
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:

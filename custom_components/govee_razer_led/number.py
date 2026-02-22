@@ -28,12 +28,14 @@ async def async_setup_entry(
 
     amplitude_entity = GoveeWaveAmplitude(hass, name, host, config_entry.entry_id, coordinator)
     speed_entity = GoveeWaveSpeed(hass, name, host, config_entry.entry_id, coordinator)
+    color_flow_entity = GoveeColorFlowSpeed(hass, name, host, config_entry.entry_id, coordinator)
     
     # Register with coordinator
     coordinator.amplitude_entity = amplitude_entity
     coordinator.speed_entity = speed_entity
+    coordinator.color_flow_entity = color_flow_entity
     
-    entities = [amplitude_entity, speed_entity]
+    entities = [amplitude_entity, speed_entity, color_flow_entity]
 
     async_add_entities(entities)
 
@@ -157,6 +159,68 @@ class GoveeWaveSpeed(NumberEntity):
         return {
             "identifiers": {(DOMAIN, self._host)},
             "name": self._name.replace(" Wave Speed", ""),
+            "manufacturer": "Govee",
+            "model": "Razer LED Strip",
+        }
+
+
+class GoveeColorFlowSpeed(NumberEntity):
+    """Representation of color flow speed control."""
+
+    _attr_mode = NumberMode.SLIDER
+    _attr_native_min_value = -100
+    _attr_native_max_value = 100
+    _attr_native_step = 1
+    _attr_icon = "mdi:palette"
+
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        name: str,
+        host: str,
+        entry_id: str,
+        coordinator,
+    ):
+        """Initialize the color flow speed control."""
+        self.hass = hass
+        self._name = f"{name} Color Flow Speed"
+        self._host = host
+        self._entry_id = entry_id
+        self._coordinator = coordinator
+        self._value = coordinator.color_flow_speed
+
+    @property
+    def name(self) -> str:
+        """Return the name of the number entity."""
+        return self._name
+
+    @property
+    def unique_id(self) -> str:
+        """Return a unique ID."""
+        return f"{self._host}_color_flow_speed"
+
+    @property
+    def native_value(self) -> float:
+        """Return the current value."""
+        return self._value
+
+    async def async_set_native_value(self, value: float) -> None:
+        """Update the value via coordinator."""
+        self._value = int(value)
+        self._coordinator.update_color_flow_speed(int(value))
+        
+        # Call the strip's async_set_color_flow
+        if self._coordinator.strip_entity:
+            await self._coordinator.strip_entity.async_set_color_flow(int(value))
+        
+        self.async_write_ha_state()
+
+    @property
+    def device_info(self):
+        """Return device info."""
+        return {
+            "identifiers": {(DOMAIN, self._host)},
+            "name": self._name.replace(" Color Flow Speed", ""),
             "manufacturer": "Govee",
             "model": "Razer LED Strip",
         }

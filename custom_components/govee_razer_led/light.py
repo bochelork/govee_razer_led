@@ -129,6 +129,11 @@ class GoveeRazerStrip(LightEntity):
         self._speed = coordinator.speed
         self._wave_step = 0
         self._wave_steps = 100
+        
+        # Color flow parameters
+        self._color_flow_speed = coordinator.color_flow_speed
+        self._color_flow_step = 0
+        self._color_flow_steps = 100
 
         # Protocol and color management
         self._protocol = GoveeProtocol(host, port)
@@ -227,6 +232,18 @@ class GoveeRazerStrip(LightEntity):
         _LOGGER.debug("Set wave: amplitude=%s, speed=%s", self._amplitude, self._speed)
         self.async_write_ha_state()
 
+    async def async_set_color_flow(self, speed: int) -> None:
+        """Set color flow speed."""
+        self._coordinator.update_color_flow_speed(speed)
+        self._color_flow_speed = speed
+        if speed != 0:
+            self._color_flow_steps = abs(round(100 / speed))
+        else:
+            self._color_flow_steps = 100
+        
+        _LOGGER.debug("Set color flow speed: %s", speed)
+        self.async_write_ha_state()
+
     def _calculate_brightness_wave(self, led_index: int) -> int:
         """Calculate brightness for a specific LED based on wave parameters."""
         if self._amplitude == 0:
@@ -247,8 +264,49 @@ class GoveeRazerStrip(LightEntity):
         while self._running:
             try:
                 if self._is_on:
-                    # Generate effect colors
-                    base_colors = self._color_manager.generate_effect_colors(self._effect)
+                    # Apply color flow rotation if enabled
+                    if self._color_flow_speed != 0:
+                        # Rotate the section colors based on color flow step
+                        # This mimics your original script's behavior
+                        rotated_colors = []
+                        rotation_offset = self._color_flow_step / self._color_flow_steps
+                        
+                        for i in range(self._num_sections):
+                            # Calculate which base color to use with rotation
+                            base_index = int((i + rotation_offset) % self._num_sections)
+                            next_index = int((i + rotation_offset + 1) % self._num_sections)
+                            
+                            # Interpolation factor for smooth transition
+                            interp_factor = (rotation_offset % 1.0)
+                            
+                            base_color = self._color_manager.section_colors[base_index]
+                            next_color = self._color_manager.section_colors[next_index]
+                            
+                            # Interpolate between colors
+                            r = int(base_color[0] * (1 - interp_factor) + next_color[0] * interp_factor)
+                            g = int(base_color[1] * (1 - interp_factor) + next_color[1] * interp_factor)
+                            b = int(base_color[2] * (1 - interp_factor) + next_color[2] * interp_factor)
+                            
+                            rotated_colors.append([r, g, b])
+                        
+                        # Temporarily update color manager with rotated colors
+                        original_colors = self._color_manager.section_colors.copy()
+                        self._color_manager.section_colors = rotated_colors
+                        
+                        # Generate effect colors with rotated sections
+                        base_colors = self._color_manager.generate_effect_colors(self._effect)
+                        
+                        # Restore original colors
+                        self._color_manager.section_colors = original_colors
+                        
+                        # Update color flow step
+                        if self._color_flow_speed > 0:
+                            self._color_flow_step = (self._color_flow_step + 1) % self._color_flow_steps
+                        else:
+                            self._color_flow_step = (self._color_flow_step - 1) % self._color_flow_steps
+                    else:
+                        # No color flow, use static colors
+                        base_colors = self._color_manager.generate_effect_colors(self._effect)
                     
                     # Apply brightness wave
                     final_colors = []

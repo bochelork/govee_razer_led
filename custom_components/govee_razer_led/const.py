@@ -15,6 +15,7 @@ DEFAULT_UPDATE_INTERVAL = 0.05
 DEFAULT_BRIGHTNESS = 128
 DEFAULT_AMPLITUDE = 50
 DEFAULT_SPEED = 30
+DEFAULT_COLOR_FLOW_SPEED = 0  # 0 = disabled
 
 # Limits
 MIN_SECTIONS = 2
@@ -35,3 +36,4 @@ SERVICE_SET_WAVE = "set_wave"
 # Service parameters
 ATTR_AMPLITUDE = "amplitude"
 ATTR_SPEED = "speed"
+ATTR_COLOR_FLOW_SPEED = "color_flow_speed"
